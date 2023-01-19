@@ -16,7 +16,7 @@ inputSearchBox.addEventListener('input', debounce(searchInput, DEBOUNCE_DELAY));
 function searchInput(e) {
   const inputStart = e.target.value.trim();
   if (!inputStart) {
-    updateMarkup('', '');
+    creatNewMarkup('', '');
   } else {
     fetchCountries(inputStart).then(addMarkup).catch(addErrorMessage);
   }
@@ -77,4 +77,29 @@ function addErrorMessage(error) {
     creatNewMarkup('', '');
     Notify.failure(strErr);
   }
+}
+
+function addInformMessage() {
+  const strTooMany =
+    'Too many matches found. Please enter a more specific name.';
+  creatNewMarkup('', '');
+  Notify.info(strTooMany);
+}
+
+function creatNewMarkup(countrysListMarkup, countryInformMarkup) {
+  countryInfo.innerHTML = countryInformMarkup;
+  countryList.innerHTML = countrysListMarkup;
+}
+
+function addInlineStyles() {
+  const extraStyles = `<style>
+        body {margin: 10px;}
+        h1 {display: inline}
+        h2 {margin: 0;}
+        ul {list-style: none;padding: 0}
+        li {display: flex;padding: 5px}
+        img {margin-right: 10px;}
+        span {font-weight: 400;}
+    </style>`;
+  document.head.insertAdjacentHTML('beforeend', extraStyles);
 }
