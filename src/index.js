@@ -12,3 +12,22 @@ const countryInfo = document.querySelector('.country-info');
 addInlineStyles();
 
 inputSearchBox.addEventListener('input', debounce(searchInput, DEBOUNCE_DELAY));
+
+function searchInput(e) {
+  const inputStart = e.target.value.trim();
+  if (!inputStart) {
+    updateMarkup('', '');
+  } else {
+    fetchCountries(inputStart).then(addMarkup).catch(createErrorMessage);
+  }
+}
+
+function addMarkup(countriesArr) {
+  if (countriesArr.length > 10) {
+    createInfoMessage();
+  } else if (countriesArr.length === 1) {
+    createCountryInfoMarkup(countriesArr);
+  } else {
+    createCountryListMarkup(countriesArr);
+  }
+}
