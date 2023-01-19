@@ -18,16 +18,63 @@ function searchInput(e) {
   if (!inputStart) {
     updateMarkup('', '');
   } else {
-    fetchCountries(inputStart).then(addMarkup).catch(createErrorMessage);
+    fetchCountries(inputStart).then(addMarkup).catch(addErrorMessage);
   }
 }
 
 function addMarkup(countriesArr) {
   if (countriesArr.length > 10) {
-    createInfoMessage();
+    addInformMessage();
   } else if (countriesArr.length === 1) {
-    createCountryInfoMarkup(countriesArr);
+    addCountryInformMarkup(countriesArr);
   } else {
-    createCountryListMarkup(countriesArr);
+    addCountrysListMarkup(countriesArr);
+  }
+}
+
+function addCountryInformMarkup(country) {
+  const [
+    {
+      name: countryName,
+      capital,
+      population,
+      flags: { svg },
+      languages,
+    },
+  ] = country;
+  const langsStr = languages.map(({ name }) => name).join(', ');
+
+  const markup = `<div class="country-wrapper">
+        <img src="${svg}" alt="${countryName}" width=50/>
+        <h1>${countryName}</h1>
+      </div>
+      <h2>Capital: <span>${capital}</span></h2>
+      <h2>Population: <span>${population}</span></h2>
+      <h2>Languages: <span>${langsStr}</span></h2>`;
+
+  creatNewMarkup('', markup);
+}
+
+function addCountrysListMarkup(countriesList) {
+  const markup = countriesList
+    .map(
+      ({ name, flags: { svg } }) =>
+        `<li>
+            <img src="${svg}" alt="${name}" width=50/>
+            <h2>${name}</h2>
+        </li>`
+    )
+    .join('');
+
+  creatNewMarkup(markup, '');
+}
+
+function addErrorMessage(error) {
+  const strErr = 'Oops, there is no country with that name';
+
+  console.log('error :>> ', error.message);
+  if (error.message === '404') {
+    creatNewMarkup('', '');
+    Notify.failure(strErr);
   }
 }
